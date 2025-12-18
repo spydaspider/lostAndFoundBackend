@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
-const user = require('../models/user.js');
-const createToken = (_id) =>{
+const createToken = (user) =>{
     return jwt.sign({_id: user._id, role: user.role},process.env.SECRET,{expiresIn: '3d'});
 }
 //signup
@@ -46,6 +45,15 @@ const adminLogin = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+const getUsers = async(req,res)=>{
+  try{
+    const users = await User.find();
+    res.status(201).json(users);
+  }
+  catch(error){
+    return res.status(401).json({error: "User not found"})
+  }
+}
 
 
-module.exports = { signup, login,adminLogin };
+module.exports = { signup, login,adminLogin,getUsers };

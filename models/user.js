@@ -53,6 +53,7 @@ UserSchema.statics.signup = async function(username,email,password){
        return user;
 }
 UserSchema.statics.login = async function(email,password){
+    
     if(!email || !password)
     {
         throw Error('Enter email and password');
