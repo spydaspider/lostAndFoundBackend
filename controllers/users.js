@@ -3,6 +3,9 @@ const User = require('../models/user.js');
 const createToken = (user) =>{
     return jwt.sign({_id: user._id, role: user.role},process.env.SECRET,{expiresIn: '3d'});
 }
+
+
+
 //signup
 const signup = async(req,res) =>{
     const { username, email, password } = req.body;

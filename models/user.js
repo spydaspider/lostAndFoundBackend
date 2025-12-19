@@ -3,27 +3,22 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const UserSchema = new Schema({
-    username:{
-        type: String,
-        required: true,
-        unique: true
-    },
-    email:{
-        type: String,
-        required: true,
-        unique: true
-    },
-    password:{
-        type: String,
-        required: true
-    },
+  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
 
-role: {
+  role: {
     type: String,
     enum: ['user', 'admin'],
     default: 'user'
+  },
+
+  isActive: {
+    type: Boolean,
+    default: true
   }
-},{timestamps: true});
+}, { timestamps: true });
+
 UserSchema.statics.signup = async function(username,email,password){
        if(!username || !email || !password)
        {
@@ -52,22 +47,25 @@ UserSchema.statics.signup = async function(username,email,password){
        const user = await this.create({username, email, password:hash, role: 'user'});
        return user;
 }
-UserSchema.statics.login = async function(email,password){
-    
-    if(!email || !password)
-    {
-        throw Error('Enter email and password');
-    }
-    const isCorrectEmail = await this.findOne({email});
-    if(!isCorrectEmail)
-    {
-        throw Error('Email is incorrect');
-    }
-    const isPassMatch = await bcrypt.compare(password,isCorrectEmail.password);
-    if(!isPassMatch)
-    {
-           throw Error('Password is incorrect');
-    }
-    return isCorrectEmail;
-}
+UserSchema.statics.login = async function (email, password) {
+  if (!email || !password) {
+    throw Error('Enter email and password');
+  }
+
+  const user = await this.findOne({ email });
+  if (!user) {
+    throw Error('Email is incorrect');
+  }
+
+  if (!user.isActive) {
+    throw Error('Account is deactivated');
+  }
+
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) {
+    throw Error('Password is incorrect');
+  }
+
+  return user;
+};
 module.exports = mongoose.model('User', UserSchema);
