@@ -5,9 +5,11 @@ const itemLostAndFoundPost = require('./routes/itemLostAndFoundPost.js');
 const claimant = require('./routes/claimRoute.js');
 const adminItemRoutes = require('./routes/adminItems');
 const adminClaimRoutes = require('./routes/adminClaims');
+const path = require("path");
 
 require("dotenv").config();
 const app = express();
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use((req,res,next)=>{
