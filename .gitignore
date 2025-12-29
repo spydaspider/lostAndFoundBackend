@@ -1,1 +1,33 @@
 seedAdmin.js
+# dependencies
+node_modules/
+
+# env secrets
+.env
+.env.*
+
+# uploads (don’t commit user images)
+uploads/
+*.jpg
+*.jpeg
+*.png
+*.webp
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# build / cache
+dist/
+build/
+coverage/
+.tmp/
+.cache/
