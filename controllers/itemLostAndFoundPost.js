@@ -57,7 +57,7 @@ const createItem = async (req, res) => {
 
 const getAllItems = async (req, res) => {
   try {
-    const items = await Item.find({ status: 'open' })
+    const items = await Item.find({})
       .populate('postedBy', 'username')
       .sort({ createdAt: -1 });
 
@@ -66,6 +66,7 @@ const getAllItems = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 
 /**
  * Get single item by ID
