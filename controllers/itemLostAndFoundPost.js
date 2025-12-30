@@ -17,7 +17,9 @@ const createItem = async (req, res) => {
     }
 
     // Placeholder: image path (replace later with cloud upload URL)
+
     const imageUrl = `uploads/${req.file.originalname}`;
+
 
     // Hash verification answer for security
     const salt = await bcrypt.genSalt(10);
