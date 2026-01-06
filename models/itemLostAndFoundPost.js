@@ -24,6 +24,7 @@ const ItemSchema = new Schema(
         'Keys',
         'ID Card',
         'Bag',
+        'Headphones',
         'Other'
       ]
     },

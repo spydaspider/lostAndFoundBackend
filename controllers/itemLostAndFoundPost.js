@@ -18,7 +18,7 @@ const createItem = async (req, res) => {
 
     // Placeholder: image path (replace later with cloud upload URL)
 
-    const imageUrl = `uploads/${req.file.originalname}`;
+    const imageUrl = `uploads/${req.file.filename}`;
 
 
     // Hash verification answer for security
