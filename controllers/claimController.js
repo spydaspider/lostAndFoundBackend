@@ -1,6 +1,8 @@
 const Claim = require('../models/claimSchema');
+const User = require('../models/user.js');
 const Item = require('../models/itemLostAndFoundPost');
 const bcrypt = require('bcrypt');
+const sendBrevoEmail = require('../utilities/emailSender.js');
 const normalize = (text) => text.toLowerCase().trim();
 
 const submitClaim = async (req, res) => {
@@ -68,7 +70,23 @@ const submitClaim = async (req, res) => {
       answerProvided: normalizedAnswer,
       message
     });
+    //get the email of the user
+      
+  const user = await User.findById(req.user._id).select('email username');
 
+   const emailTemplate = `
+
+    <p>We received your claim, it is being processed, we will contact you shortly.</p>
+    
+  `;
+  
+// Call the Brevo email function
+await sendBrevoEmail({
+subject: 'New Claim',
+to: [{ email: user.email, name: user.username }],
+emailTemplate,
+});
+    
     res.status(201).json({
       message: 'Claim submitted successfully',
       claim

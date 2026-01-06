@@ -1,6 +1,7 @@
 const Claim = require('../models/claimSchema');
 const Item = require('../models/itemLostAndFoundPost');
 const bcrypt = require('bcrypt');
+const sendBrevoEmail = require('../utilities/emailSender');
 
 const getAllClaimsAdmin = async (req, res) => {
   try {
@@ -128,7 +129,8 @@ const updateClaimStatus = async (req, res) => {
   }
 
   try {
-    const claim = await Claim.findById(id).populate('item');
+    const claim = await Claim.findById(id).populate('item').populate('claimant','email username');
+
 
     if (!claim) {
       return res.status(404).json({ error: 'Claim not found' });
@@ -142,6 +144,19 @@ const updateClaimStatus = async (req, res) => {
       claim.item.status = 'claimed';
       await claim.item.save();
     }
+    
+       const emailTemplate = `
+    
+        <p>Claim ${status}.</p>
+        
+      `;
+      console.log("Sending email");
+    // Call the Brevo email function
+    await sendBrevoEmail({
+    subject: 'New Claim',
+    to: [{ email: claim.claimant.email, name: claim.claimant.username }],
+    emailTemplate,
+    });
 
     res.status(200).json({
       message: `Claim ${status}`,
